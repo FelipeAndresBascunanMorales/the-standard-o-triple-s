@@ -27,10 +27,10 @@ namespace OtripleS.Web.Api.Infrastructure.Provision.Brokers.Clouds
             this.tenantId = Environment.GetEnvironmentVariable("AzureTenantId");
             this.adminName = Environment.GetEnvironmentVariable("AzureAdminName");
             this.adminAccess = Environment.GetEnvironmentVariable("AzureAdminAccess");
-            this.azure = AutneticateAzure();
+            this.azure = AuthenticateAzure();
         }
 
-        private IAzure AutneticateAzure()
+        private IAzure AuthenticateAzure()
         {
             AzureCredentials credentials =
                 SdkContext.AzureCredentialsFactory.FromServicePrincipal(
@@ -39,7 +39,8 @@ namespace OtripleS.Web.Api.Infrastructure.Provision.Brokers.Clouds
                     tenantId: this.tenantId,
                     environment: AzureEnvironment.AzureGlobalCloud);
 
-            return Azure.Configure()
+            return Microsoft.Azure.Management.Fluent.Azure
+                        .Configure()
                         .WithLogLevel(HttpLoggingDelegatingHandler.Level.Basic)
                         .Authenticate(credentials)
                         .WithDefaultSubscription();
